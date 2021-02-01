@@ -69,6 +69,8 @@
         window.removeEventListener('mousemove', mousemove);
     }
 
+    // https://css-tricks.com/when-to-use-svg-vs-when-to-use-canvas/
+
 
 </script>
 
@@ -78,7 +80,7 @@
 
 <main>
 
-<canvas id="myCanvas" width="578" height="200" on:mousedown={mousedown}></canvas>
+    <canvas id="myCanvas" width="578" height="200" on:mousedown={mousedown}></canvas>
     <div class="dots-container">
         <table>
             <tr>
