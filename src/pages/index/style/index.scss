@@ -1,1 +1,17 @@
 @import "src/style/index";
+
+
+.svg {
+  background: $bg-color;
+  border: 1px solid red;
+}
+.svg-dots-container {
+  fill: $green-primary;
+}
+
+.svg-dot {
+  fill: $green-secondary;
+}
+.svg-dot:hover {
+  fill: $bg-color;
+}

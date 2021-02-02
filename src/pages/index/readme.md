@@ -1,0 +1,1 @@
+if width="450px" height="100px" is omitted, it will take all the display
