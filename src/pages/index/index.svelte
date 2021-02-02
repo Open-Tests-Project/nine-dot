@@ -8,7 +8,7 @@
 
     var line;
     var points;
-    var handDrawing = true;
+    var handDrawing = false;
     var downEvent;
 
     onMount(() => {
@@ -27,13 +27,13 @@
         points = line.getAttribute("points");
     }
     function move (event) {
-        event.preventDefault();
+
         var x = Math.round(event.touches[0].clientX);
         var y = Math.round(event.touches[0].clientY);
         if (handDrawing) {
             points = line.getAttribute("points");
         }
-
+        console.log(x, y)
         line.setAttribute("points", points + " " + x + "," + y);
 
     }
@@ -66,6 +66,7 @@
         <circle class="svg-dot" cx="630" cy="530" r="50"/>
         <g stroke="red" fill="none">
             <polyline points="14,17 136,37" stroke-width="5"/>
+            <path stroke="blue" d="M70 75L25.9 1.2" />
         </g>
 
         <line fill="none" stroke="black" x1="360" y1="6" x2="360" y2="95"/>
