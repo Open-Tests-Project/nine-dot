@@ -27,13 +27,13 @@
         points = line.getAttribute("points");
     }
     function move (event) {
-
+        event.preventDefault();
         var x = Math.round(event.touches[0].clientX);
         var y = Math.round(event.touches[0].clientY);
         if (handDrawing) {
             points = line.getAttribute("points");
         }
-        
+
         line.setAttribute("points", points + " " + x + "," + y);
 
     }
