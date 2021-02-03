@@ -39,18 +39,19 @@
         var y = point.y;
         // console.log(point);
 
-        document.querySelector(".svg").addEventListener('pointermove', move);
+        svg.addEventListener('pointermove', move);
         line.setAttribute("points", x + "," + y);
         points = line.getAttribute("points");
     }
     function move (event) {
-        event.preventDefault();
+        // event.preventDefault();
         // var x = Math.round(event.clientX);
         // var y = Math.round(event.clientY);
         var point = cursorPoint(event);
         var x = point.x;
         var y = point.y;
         // console.log(point);
+        console.log("move")
 
         if (handDrawing) {
             points = line.getAttribute("points");
@@ -60,8 +61,9 @@
 
     }
     function stop (event) {
+        console.log("stop")
         event.preventDefault();
-        document.querySelector(".svg").removeEventListener('pointermove', move);
+        svg.removeEventListener('pointermove', move);
     }
 
     // https://css-tricks.com/when-to-use-svg-vs-when-to-use-canvas/
@@ -73,7 +75,7 @@
 
 <main>
 
-    <svg on:pointerdown ={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 1000 1000" class="svg">
         <rect class="svg-dots-container" x="300" y="200" width="400" height="400"/>
         <circle class="svg-dot" cx="370" cy="270" r="50"/>

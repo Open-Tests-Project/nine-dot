@@ -4,6 +4,8 @@
 .svg {
   background: $bg-color;
   border: 1px solid red;
+  // https://stackoverflow.com/questions/48124372/pointermove-event-not-working-with-touch-why-not
+  touch-action: none;
 }
 .svg-dots-container {
   fill: $green-primary;
