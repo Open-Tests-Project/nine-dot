@@ -1,5 +1,5 @@
 <script>
-
+    // https://css-tricks.com/when-to-use-svg-vs-when-to-use-canvas/
     import { onMount } from 'svelte';
     var canvas;
     var context;
@@ -8,10 +8,11 @@
 
     var line;
     var points;
-    var handDrawing = true;
+    var handDrawing = false;
     var downEvent;
     var svg;
     var pt;
+    var mouseDown = false;
 
     // https://stackoverflow.com/questions/10298658/mouse-position-inside-autoscaled-svg
     function cursorPoint(evt){
@@ -25,7 +26,6 @@
         // Create an SVGPoint for future math
         pt = svg.createSVGPoint();
         line = document.querySelector("polyline");
-        console.log(line.getAttribute("points"));
 
     });
 
@@ -42,16 +42,16 @@
         svg.addEventListener('pointermove', move);
         line.setAttribute("points", x + "," + y);
         points = line.getAttribute("points");
+        mouseDown = true;
     }
     function move (event) {
-        // event.preventDefault();
+        event.preventDefault();
         // var x = Math.round(event.clientX);
         // var y = Math.round(event.clientY);
         var point = cursorPoint(event);
         var x = point.x;
         var y = point.y;
-        // console.log(point);
-        console.log("move")
+
 
         if (handDrawing) {
             points = line.getAttribute("points");
@@ -61,12 +61,28 @@
 
     }
     function stop (event) {
-        console.log("stop")
+        mouseDown = false;
         event.preventDefault();
         svg.removeEventListener('pointermove', move);
+
+        line.setAttribute("points", "");
+
+
+        [].forEach.call(svg.querySelectorAll(".entered"), function (circle) {
+            circle.classList.remove("entered");
+        });
+
     }
 
-    // https://css-tricks.com/when-to-use-svg-vs-when-to-use-canvas/
+
+    function enter (event) {
+        event.preventDefault();
+        if (mouseDown) {
+            var target = event.target;
+            target.classList.add("entered");
+        }
+
+    }
 
 
 </script>
@@ -75,20 +91,23 @@
 
 <main>
 
+    handDrawing
+    <input type=checkbox bind:checked={handDrawing}>
+
     <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 1000 1000" class="svg">
         <rect class="svg-dots-container" x="300" y="200" width="400" height="400"/>
-        <circle class="svg-dot" cx="370" cy="270" r="50"/>
-        <circle class="svg-dot" cx="370" cy="400" r="50"/>
-        <circle class="svg-dot" cx="370" cy="530" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="270" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="400" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="530" r="50"/>
 
-        <circle class="svg-dot" cx="500" cy="270" r="50"/>
-        <circle class="svg-dot" cx="500" cy="400" r="50"/>
-        <circle class="svg-dot" cx="500" cy="530" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="270" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="400" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="530" r="50"/>
 
-        <circle class="svg-dot" cx="630" cy="270" r="50"/>
-        <circle class="svg-dot" cx="630" cy="400" r="50"/>
-        <circle class="svg-dot" cx="630" cy="530" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="270" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="400" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="530" r="50"/>
         <g stroke="red" fill="none">
             <polyline points="" stroke-width="5"/>
             <path stroke="blue" d="M70 75L25.9 1.2" />
