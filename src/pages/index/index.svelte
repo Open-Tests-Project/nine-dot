@@ -31,6 +31,7 @@
 
 
     function start (event) {
+        event.preventDefault();
         // var x = Math.round(event.touches[0].clientX);
         // var y = Math.round(event.touches[0].clientY);
         var point = cursorPoint(event);
@@ -43,7 +44,7 @@
         points = line.getAttribute("points");
     }
     function move (event) {
-
+        event.preventDefault();
         // var x = Math.round(event.clientX);
         // var y = Math.round(event.clientY);
         var point = cursorPoint(event);
@@ -59,6 +60,7 @@
 
     }
     function stop (event) {
+        event.preventDefault();
         document.querySelector(".svg").removeEventListener('pointermove', move);
     }
 
