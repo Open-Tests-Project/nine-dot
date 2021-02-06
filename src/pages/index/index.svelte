@@ -13,6 +13,7 @@
     var svg;
     var pt;
     var mouseDown = false;
+    var FACTOR = 1;
 
     // https://stackoverflow.com/questions/10298658/mouse-position-inside-autoscaled-svg
     function cursorPoint(evt){
@@ -37,7 +38,7 @@
         var point = cursorPoint(event);
         var x = point.x;
         var y = point.y;
-        // console.log(point);
+        console.log(point);
 
         svg.addEventListener('pointermove', move);
         line.setAttribute("points", x + "," + y);
@@ -95,21 +96,21 @@
     <input type=checkbox bind:checked={handDrawing}>
 
     <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         viewBox="0 0 1000 1000" class="svg">
-        <rect class="svg-dots-container" x="300" y="200" width="400" height="400"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="270" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="400" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="370" cy="530" r="50"/>
+         viewBox="0 0 {500 * FACTOR} {500 * FACTOR}" class="svg">
+        <rect class="svg-dots-container" x="{150 * FACTOR}" y="{100 * FACTOR}" width="{200 * FACTOR}" height="{200 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
 
-        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="270" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="400" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="500" cy="530" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
 
-        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="270" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="400" r="50"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="630" cy="530" r="50"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
+        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
         <g stroke="red" fill="none">
-            <polyline points="" stroke-width="5"/>
+            <polyline points="" stroke-width="3"/>
             <path stroke="blue" d="M70 75L25.9 1.2" />
         </g>
 
