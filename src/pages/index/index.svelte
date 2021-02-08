@@ -1,19 +1,27 @@
 <script>
-    // https://css-tricks.com/when-to-use-svg-vs-when-to-use-canvas/
+
     import { onMount } from 'svelte';
-    var canvas;
-    var context;
-    var last_mousex;
-    var last_mousey;
+
+    var circles = require("src/pages/index/circles");
+    var contants = require("src/pages/index/contants");
 
     var line;
     var points;
     var handDrawing = false;
-    var downEvent;
     var svg;
     var pt;
-    var mouseDown = false;
-    var FACTOR = 1;
+    var circlesInstances = {};
+    Snap.plugin( function( Snap, Element, Paper, global ) {
+        Paper.prototype.circlePath = function(cx,cy,r) {
+            var p = "M" + cx + "," + cy;
+            p += "m" + -r + ",0";
+            p += "a" + r + "," + r + " 0 1,0 " + (r*2) +",0";
+            p += "a" + r + "," + r + " 0 1,0 " + -(r*2) + ",0";
+            return this.path(p, cx, cy );
+
+        };
+    });
+
 
     // https://stackoverflow.com/questions/10298658/mouse-position-inside-autoscaled-svg
     function cursorPoint(evt){
@@ -26,48 +34,67 @@
         svg = document.querySelector(".svg");
         // Create an SVGPoint for future math
         pt = svg.createSVGPoint();
-        line = document.querySelector("polyline");
+
+        var s = Snap(".svg");
+        circles.forEach(function (circle, index) {
+            circlesInstances["circle0" + (index + 1)] = s.circlePath(circle.cx, circle.cy, circle.r).attr({
+                class: "svg-dot",
+                // id: "circle0" + (index + 1)
+            });
+        });
+        line = s.path("").attr({
+            stroke: "red",
+            "stroke-width": "3",
+            id: "line",
+            fill: "none"
+        }).node;
+
 
     });
 
 
     function start (event) {
         event.preventDefault();
-        // var x = Math.round(event.touches[0].clientX);
-        // var y = Math.round(event.touches[0].clientY);
         var point = cursorPoint(event);
         var x = point.x;
         var y = point.y;
-        console.log(point);
 
         svg.addEventListener('pointermove', move);
-        line.setAttribute("points", x + "," + y);
-        points = line.getAttribute("points");
-        mouseDown = true;
+        line.setAttribute("d", "M" + x + "," + y);
+        points = line.getAttribute("d");
     }
     function move (event) {
         event.preventDefault();
-        // var x = Math.round(event.clientX);
-        // var y = Math.round(event.clientY);
+
         var point = cursorPoint(event);
         var x = point.x;
         var y = point.y;
 
+        requestAnimationFrame(function () {
+            for (var circle in circlesInstances) {
+                var c = circlesInstances[circle];
+                var intersects = Snap.path.intersection(c.node.getAttribute("d"), line.getAttribute("d"));
+                if (intersects.length) {
+                    c.node.classList.add("entered");
+                } else {
+                    c.node.classList.remove("entered");
+                }
+            }
+        });
 
         if (handDrawing) {
-            points = line.getAttribute("points");
+            points = line.getAttribute("d");
         }
 
-        line.setAttribute("points", points + " " + x + "," + y);
+        line.setAttribute("d", points + " " + x + "," + y);
 
     }
     function stop (event) {
-        mouseDown = false;
+
         event.preventDefault();
         svg.removeEventListener('pointermove', move);
 
-        line.setAttribute("points", "");
-
+        line.setAttribute("d", "");
 
         [].forEach.call(svg.querySelectorAll(".entered"), function (circle) {
             circle.classList.remove("entered");
@@ -76,14 +103,7 @@
     }
 
 
-    function enter (event) {
-        event.preventDefault();
-        if (mouseDown) {
-            var target = event.target;
-            target.classList.add("entered");
-        }
 
-    }
 
 
 </script>
@@ -96,25 +116,10 @@
     <input type=checkbox bind:checked={handDrawing}>
 
     <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         viewBox="0 0 {500 * FACTOR} {500 * FACTOR}" class="svg">
-        <rect class="svg-dots-container" x="{150 * FACTOR}" y="{100 * FACTOR}" width="{200 * FACTOR}" height="{200 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{185 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
+         viewBox="0 0 {500 * contants.FACTOR} {500 * contants.FACTOR}" class="svg">
+        <rect class="svg-dots-container" x="{150 * contants.FACTOR}" y="{100 * contants.FACTOR}" width="{200 * contants.FACTOR}" height="{200 * contants.FACTOR}"/>
 
-        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{250 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
 
-        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{135 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{200 * FACTOR}" r="{25 * FACTOR}"/>
-        <circle on:pointerenter={enter} class="svg-dot" cx="{315 * FACTOR}" cy="{265 * FACTOR}" r="{25 * FACTOR}"/>
-        <g stroke="red" fill="none">
-            <polyline points="" stroke-width="3"/>
-            <path stroke="blue" d="M70 75L25.9 1.2" />
-        </g>
-
-        <line fill="none" stroke="black" x1="360" y1="6" x2="360" y2="95"/>
     </svg>
 
 

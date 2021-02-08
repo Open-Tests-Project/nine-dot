@@ -96,7 +96,7 @@ module.exports = function (env) {
                     options: {
                       preprocess: require("svelte-preprocess")({ /* options */ })
                     }
-                },
+                }
             ]
         
         },
