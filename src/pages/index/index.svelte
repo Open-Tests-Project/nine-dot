@@ -3,14 +3,19 @@
     import { onMount } from 'svelte';
 
     var circles = require("src/pages/index/circles");
-    var contants = require("src/pages/index/contants");
+    var constants = require("src/pages/index/contants");
 
+    var s;
     var line;
     var points;
     var handDrawing = false;
     var svg;
     var pt;
+    var timeout;
     var circlesInstances = {};
+    var lineCircles = [];
+    var segmentCounter = 0;
+    var circlesCounter = 0;
     Snap.plugin( function( Snap, Element, Paper, global ) {
         Paper.prototype.circlePath = function(cx,cy,r) {
             var p = "M" + cx + "," + cy;
@@ -35,7 +40,7 @@
         // Create an SVGPoint for future math
         pt = svg.createSVGPoint();
 
-        var s = Snap(".svg");
+        s = Snap(".svg");
         circles.forEach(function (circle, index) {
             circlesInstances["circle0" + (index + 1)] = s.circlePath(circle.cx, circle.cy, circle.r).attr({
                 class: "svg-dot",
@@ -43,12 +48,14 @@
             });
         });
         line = s.path("").attr({
-            stroke: "red",
+            stroke: "#101014",
             "stroke-width": "3",
             id: "line",
             fill: "none"
         }).node;
 
+
+        svg.style.height = document.body.clientHeight + "px";
 
     });
 
@@ -62,6 +69,7 @@
         svg.addEventListener('pointermove', move);
         line.setAttribute("d", "M" + x + "," + y);
         points = line.getAttribute("d");
+
     }
     function move (event) {
         event.preventDefault();
@@ -80,6 +88,9 @@
                     c.node.classList.remove("entered");
                 }
             }
+
+            circlesCounter = svg.querySelectorAll(".entered").length;
+
         });
 
         if (handDrawing) {
@@ -87,6 +98,23 @@
         }
 
         line.setAttribute("d", points + " " + x + "," + y);
+
+        clearInterval(timeout);
+        timeout = setTimeout(function () {
+
+            points = line.getAttribute("d");
+            if (points && circlesCounter < 9) {
+                s.circlePath(x, y, 5).attr({
+                    class: "line-dot",
+                });
+                segmentCounter += 1;
+            }
+
+            if (circlesCounter === 9) {
+                svg.removeEventListener('pointermove', move);
+            }
+
+        }, 1200);
 
     }
     function stop (event) {
@@ -100,9 +128,12 @@
             circle.classList.remove("entered");
         });
 
+        [].forEach.call(svg.querySelectorAll(".line-dot"), function (circle) {
+            circle.parentNode.removeChild(circle);
+        });
+
+        segmentCounter = 0;
     }
-
-
 
 
 
@@ -114,36 +145,13 @@
 
     handDrawing
     <input type=checkbox bind:checked={handDrawing}>
+    segments: {segmentCounter}
+    circles: {circlesCounter}
 
     <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-         viewBox="0 0 {500 * contants.FACTOR} {500 * contants.FACTOR}" class="svg">
-        <rect class="svg-dots-container" x="{150 * contants.FACTOR}" y="{100 * contants.FACTOR}" width="{200 * contants.FACTOR}" height="{200 * contants.FACTOR}"/>
-
-
+         viewBox="0 0 {500 * constants.FACTOR} {500 * constants.FACTOR}" class="svg">
+        <rect class="svg-dots-container" x="{125 * constants.FACTOR}" y="{125 * constants.FACTOR}" width="{250 * constants.FACTOR}" height="{250 * constants.FACTOR}"/>
     </svg>
-
-
-    <br><br><br><br><br><br><br>
-
-    <div class="dots-container">
-        <table>
-            <tr>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-            </tr>
-            <tr>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-            </tr>
-            <tr>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-                <td><span class="dot"></span></td>
-            </tr>
-        </table>
-    </div>
 
 </main>
 
