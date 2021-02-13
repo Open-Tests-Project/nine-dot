@@ -23,7 +23,6 @@
             p += "a" + r + "," + r + " 0 1,0 " + (r*2) +",0";
             p += "a" + r + "," + r + " 0 1,0 " + -(r*2) + ",0";
             return this.path(p, cx, cy );
-
         };
     });
 
@@ -50,12 +49,12 @@
         line = s.path("").attr({
             stroke: "#101014",
             "stroke-width": "3",
-            id: "line",
+            class: "line",
             fill: "none"
         }).node;
 
 
-        svg.style.height = document.body.clientHeight + "px";
+        // svg.style.height = document.body.clientHeight + "px";
 
     });
 
@@ -114,7 +113,7 @@
                 svg.removeEventListener('pointermove', move);
             }
 
-        }, 1200);
+        }, 1000);
 
     }
     function stop (event) {
@@ -143,10 +142,12 @@
 
 <main>
 
-    handDrawing
-    <input type=checkbox bind:checked={handDrawing}>
-    segments: {segmentCounter}
-    circles: {circlesCounter}
+    <div>
+        handDrawing
+        <input type=checkbox bind:checked={handDrawing}>
+        segments: {segmentCounter}
+        circles: {circlesCounter}
+    </div>
 
     <svg on:pointerdown={start} on:pointerup={stop} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
          viewBox="0 0 {500 * constants.FACTOR} {500 * constants.FACTOR}" class="svg">
