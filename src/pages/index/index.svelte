@@ -102,7 +102,7 @@
         timeout = setTimeout(function () {
 
             points = line.getAttribute("d");
-            if (points && circlesCounter < 9) {
+            if (points && circlesCounter <= 9) {
                 s.circlePath(x, y, 5).attr({
                     class: "line-dot",
                 });
